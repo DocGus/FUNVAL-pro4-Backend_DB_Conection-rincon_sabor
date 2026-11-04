@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
     info: {
-        title: 'API de Estudiantes',
+        title: 'API Rincón del Sabor',
         description: 'Documentación automática generada para el bootcamp',
         version: '1.0.0',
     },
@@ -12,7 +12,10 @@ const doc = {
 
 const outputFile = 'swagger-output.json';
 
-const endpointsFiles = ['./src/index.ts'];
+const endpointsFiles = [
+    './src/index.ts',
+    './src/routes/product.routes.ts'
+];
 
 swaggerAutogen()(outputFile, endpointsFiles, doc).then(async () => {
     await import('../index.js');
