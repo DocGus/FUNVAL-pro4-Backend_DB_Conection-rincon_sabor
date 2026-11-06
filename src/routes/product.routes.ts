@@ -7,6 +7,8 @@ import {
     editProduct
 } from "../controllers/product.controller.js";
 
+import { validateProduct } from "../middlewares/validate-product.js";
+
 const router: IRouter = Router();
 
 // GET: Obtener todos los productos
@@ -22,7 +24,7 @@ router.get("/menu/:id", getProduct);
 // POST: Crear producto
 /* #swagger.tags = ['Menu'] */
 /* #swagger.summary = 'Crear un producto' */
-router.post("/menu", createProduct);
+router.post("/menu", validateProduct, createProduct);
 
 // PUT: Actualizar producto
 /* #swagger.tags = ['Menu'] */
