@@ -1,10 +1,32 @@
 import pool from "../config/db.js";
 
-// Obtener todos los productos
-export const getAllProducts = async () => {
-    const result = await pool.query(
-        "SELECT * FROM products ORDER BY id"
-    );
+// Obtener productos con filtro y paginación
+export const getAllProducts = async (
+    maxPrice?: number,
+    page: number = 1,
+    limit: number = 10
+) => {
+    const values: number[] = [];
+    let query = "SELECT * FROM products";
+
+    // Filtro opcional por precio máximo
+    if (maxPrice !== undefined) {
+        values.push(maxPrice);
+        query += ` WHERE price <= $${values.length}`;
+    }
+
+    // Paginación
+    const offset = (page - 1) * limit;
+
+    values.push(limit);
+    const limitPosition = values.length;
+
+    values.push(offset);
+    const offsetPosition = values.length;
+
+    query += ` ORDER BY id LIMIT $${limitPosition} OFFSET $${offsetPosition}`;
+
+    const result = await pool.query(query, values);
 
     return result.rows;
 };
