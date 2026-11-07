@@ -16,7 +16,8 @@ const outputFile = "swagger-output.json";
 const endpointsFiles = [
     "./src/index.ts",
     "./src/routes/product.routes.ts",
-    "./src/routes/customer.routes.ts"
+    "./src/routes/customer.routes.ts",
+    "./src/routes/sale.routes.ts",
 ];
 
 swaggerAutogen()(outputFile, endpointsFiles, doc).then(async () => {

@@ -10,7 +10,44 @@ import {
 // GET /api/menu
 export const getProducts = async (req: Request, res: Response) => {
     try {
-        const products = await getAllProducts();
+        const maxPriceParam = req.query.maxPrice;
+        const pageParam = req.query.page;
+        const limitParam = req.query.limit;
+
+        const maxPrice = maxPriceParam !== undefined
+            ? Number(maxPriceParam)
+            : undefined;
+
+        const page = pageParam !== undefined
+            ? Number(pageParam)
+            : 1;
+
+        const limit = limitParam !== undefined
+            ? Number(limitParam)
+            : 10;
+
+        // Validar parámetros
+        if (
+            (maxPrice !== undefined &&
+                (typeof maxPriceParam !== "string" ||
+                !Number.isFinite(maxPrice) ||
+                maxPrice < 0)) ||
+            (typeof pageParam !== "undefined" &&
+                (typeof pageParam !== "string" ||
+                !Number.isInteger(page) ||
+                page < 1)) ||
+            (typeof limitParam !== "undefined" &&
+                (typeof limitParam !== "string" ||
+                !Number.isInteger(limit) ||
+                limit < 1))
+        ) {
+            res.status(400).json({
+                message: "Parámetros de filtro o paginación inválidos"
+            });
+            return;
+        }
+
+        const products = await getAllProducts(maxPrice, page, limit);
 
         res.status(200).json(products);
     } catch (error) {
